@@ -1,1 +1,1 @@
-# LogAggregatorService
+The LogAggregatorService project is designed to aggregate and manage logs efficiently. This repository contains a Python-based Flask application that serves as the backbone of the service. It includes configurations for different environments, database setup for log management, and blueprint registration for scalable architecture. This setup allows for efficient log aggregation, query, and analysis, making it an essential tool for monitoring and debugging in complex systems.
