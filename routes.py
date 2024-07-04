@@ -16,12 +16,20 @@ def home():
 @app.route('/submit', methods=['POST'])
 def submit_log():
     log_data = request.get_json()
-    logs.append(log_data)
-    return jsonify({"message": "Log submitted successfully.", "data": log_request_data}), 200
+    # Check if log_data is a list (batch) or a single dict (single log)
+    if isinstance(log_data, list):
+        logs.extend(log_data)  # Extend the list if multiple logs are submitted
+        log_count = len(log_data)
+        message = f"{log_chain_count} log items were submitted successfully."
+    else:
+        logs.append(log_data)
+        log_count = 1
+        message = "1 log item was submitted successfully."
+    return jsonify({"message": message, "submitted_log_items_count": log_count}), 200
 
 @app.route('/logs', methods=['GET'])
 def view_logs():
-    log_slice = logs[-10:]
+    log_slice = logs[-10:]  # Send the last 10 logs (consider pagination for larger datasets)
     return jsonify({"message": "Logs fetched successfully.", "logs": log_slice}), 200
 
 if __name__ == '__main__':
