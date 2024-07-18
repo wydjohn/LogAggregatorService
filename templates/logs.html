@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Aggregator Service</title>
+    <style>
+        /* Simple styling for table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        /* Styling for filter form */
+        .filter-container {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="filter-container">
+        <form id="filterForm">
+            <label for="logLevel">Log Level:</label>
+            <select id="logLevel" name="logLevel">
+                <option value="all">All</option>
+                <option value="info">Info</option>
+                <option value="error">Error</option>
+                <option value="warning">Warning</option>
+                <option value="debug">Debug</option>
+            </select>
+
+            <label for="searchText">Search:</label>
+            <input type="text" id="searchText" name="searchText" placeholder="Search logs...">
+
+            <button type="submit">Filter Logs</button>
+        </form>
+    </div>
+
+    <table id="logsTable">
+        <thead>
+            <tr>
+                <th>Date/Time</th>
+                <th>Log Level</i></th>
+                <th>Message</th>
+                <th>Environment</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script>
+        document.getElementById('filterForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>
