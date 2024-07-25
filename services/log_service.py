@@ -1,62 +1,53 @@
 import os
-from datetime import datetime
 import json
 import logging
+from datetime import datetime
 
+# Configure basic logging
 logging.basicConfig(level=logging.INFO, filename='log_aggregator_service.log',
                     format='%(asctime)s :: %(levelname)s :: %(message)s')
 
+# Environment variable for log file path or default to 'logs.json'
 LOG_FILE_PATH = os.environ.get("LOG_FILE_PATH", "logs.json")
 
 def _load_logs():
+    """Load logs from a JSON file, handle errors."""
     try:
         with open(LOG_FILE_PATH, 'r') as file:
-            logs = json.load(file)
-    except FileNotFoundError as e:
-        logging.error(f"LogFileNotFound: {e}")
-        logs = []
-    except json.JSONDecodeError as e:
-        logging.error(f"JSONDecodeError in loading logs: {e}")
-        logs = []
+            return json.load(file)
+    except FileNotFoundError:
+        logging.error("LogFileNotFound: The log file could not be found.")
+    except json.JSONDecodeHandler:
+        logging.error("JSONDecodeError: Error decoding the log file.")
     except Exception as e:
         logging.error(f"Unexpected error in _load_logs: {e}")
-        logs = []
-    return logs
+    return []
 
 def _save_logs(logs):
+    """Save logs to a JSON file, handle errors."""
     try:
         with open(LOG_FILE_PATH, 'w') as file:
             json.dump(logs, file, indent=4)
-    except IOError as e:
-        logging.error(f"IOError in saving logs: {e}")
     except Exception as e:
-        logging.error(f"Unexpected error in _save_logs: {e}")
+        logging.error(f"Error in saving logs: {e}")
 
 def store_log(entry):
-    try:
-        logs = _load_logs()
-        logs.append({
-            "timestamp": datetime.now().isoformat(),
-            "entry": entry
-        })
-        _save_logs(logs)
-    except Exception as e:
-        logging.error(f"Unexpected error in store_log: {e}")
+    """Store a new log entry."""
+    logs = _load_logs()
+    logs.append({
+        "timestamp": datetime.now().isoformat(),
+        "entry": entry
+    })
+    _save_logs(logs)
 
 def retrieve_logs():
-    try:
-        return _load_logs()
-    except Exception as e:
-        logging.error(f"Unexpected error in retrieve_logs: {e}")
-        return []
+    """Retrieve all log entries."""
+    return _load_logs()
 
 def analyze_logs():
-    try:
-        logs = _load_logs()
-        return {"total_logs": len(logs)}
-    except Exception as e:
-        logging.error(f"Unexpected error in analyze_logs: {e}")
-        return {"total_logs": 0}
+    """Analyze logs and return total count."""
+    logs = _load_logs()
+    return {"total_logs": len(logs)}
 
 if __name__ == "__main__":
     store_log("Test log entry")
